@@ -22,7 +22,201 @@
     />
     <title>RPS With Friends</title>
   </head>
-  <body></body>
+  <body>
+    <!-- Main navigation -->
+    <main>
+      <!-- Full Page Intro -->
+      <div id="intro-section" class="view">
+        <video
+          class="video-intro"
+          poster="https://mdbootstrap.com/img/Photos/Others/background.jpg"
+          playsinline
+          autoplay
+          muted
+          loop
+        >
+          <source
+            src="https://mdbootstrap.com/img/video/animation.mp4"
+            type="video/mp4"
+          />
+        </video>
+
+        <!-- Mask & flexbox options -->
+        <div
+          class="mask rgba-gradient d-flex justify-content-center align-items-center"
+          id="flex-options"
+        >
+          <!-- Content -->
+
+          <div class="container px-md-3 px-sm-0" id="intro-content">
+            <div class="row wow fadeIn">
+              <div class="col-md-12 mb-4 white-text text-center wow fadeIn">
+                <h3
+                  class="display-3 font-weight-bold white-text mb-0 pt-md-5 pt-5"
+                >
+                  Rock Paper Scissors
+                </h3>
+                <hr class="hr-light my-4 w-75" />
+                <h4 class="subtext-header mt-2 mb-4" id="join-text">
+                  Filler text for joining in the game
+                </h4>
+                <button class="btn btn-rounded btn-outline-white" id="join">
+                  <i class="fa fa-users"></i> Join
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Content -->
+
+          <div class="container px-md-3 px-sm-0" id="game-content">
+            <div class="row wow fadeIn">
+              <div class="col-md-6">
+                <h1
+                  class="display-3 font-weight-bold white-text mb-0 text-center"
+                >
+                  Player 1
+                </h1>
+                <p class="font-weight-bold white-text mb-0 text-center pb-3">
+                  Choose your weapon
+                </p>
+                <div class="zoom image-wrapper">
+                  <img src="assets/images/rock.png" class="rps-images" />
+                </div>
+                <div class="zoom image-wrapper">
+                  <img src="assets/images/paper.png" class="rps-images" />
+                </div>
+                <div class="zoom image-wrapper">
+                  <img src="assets/images/scissors.png" class="rps-images" />
+                </div>
+                <p class="font-weight-bold white-text mb-0 text-center pb-3">
+                  Wins:
+                </p>
+                <p class="font-weight-bold white-text mb-0 text-center pb-3">
+                  Losses:
+                </p>
+              </div>
+              <div class="col-md-6">
+                <h1
+                  class="display-3 font-weight-bold white-text mb-0 text-center"
+                >
+                  Player 2
+                </h1>
+                <p class="font-weight-bold white-text mb-0 text-center pb-3">
+                  Choose your weapon
+                </p>
+                <div class="zoom image-wrapper">
+                  <img src="assets/images/rock.png" class="rps-images" />
+                </div>
+                <div class="zoom image-wrapper">
+                  <img src="assets/images/paper.png" class="rps-images" />
+                </div>
+                <div class="zoom image-wrapper">
+                  <img src="assets/images/scissors.png" class="rps-images" />
+                </div>
+                <p class="font-weight-bold white-text mb-0 text-center pb-3">
+                  Wins:
+                </p>
+                <p class="font-weight-bold white-text mb-0 text-center pb-3">
+                  Losses:
+                </p>
+              </div>
+            </div>
+            <!-- CHAT BOX -->
+            <a
+              class="btn btn-rounded btn-outline-white"
+              data-toggle="collapse"
+              id="chat-toggle"
+              href="#chat"
+              aria-expanded="false"
+              aria-controls="collapseExample"
+            >
+              View Chat
+            </a>
+            <div class="card chat-room collapse" id="chat">
+              <div class="card-body">
+                <!-- Grid row -->
+                <div class="row px-lg-2 px-2">
+                  <!-- Grid column -->
+                  <div class="col-md-12 pl-md-3 px-lg-auto px-0">
+                    <div class="chat-message">
+                      <ul class="list-unstyled chat">
+                        <li class="d-flex justify-content-between mb-4">
+                          <img
+                            src="https://mdbootstrap.com/img/Photos/Avatars/avatar-6.jpg"
+                            alt="avatar"
+                            class="avatar rounded-circle mr-2 ml-lg-3 ml-0 z-depth-1"
+                          />
+                          <div class="chat-body white p-3 ml-2 z-depth-1">
+                            <div class="header">
+                              <strong class="primary-font">Brad Pitt</strong>
+                              <small class="pull-right text-muted"
+                                ><i class="fa fa-clock-o"></i> 12 mins
+                                ago</small
+                              >
+                            </div>
+                            <hr class="w-100" />
+                            <p class="mb-0">
+                              Lorem ipsum dolor sit amet, consectetur adipiscing
+                              elit, sed do eiusmod tempor incididunt ut labore
+                              et dolore magna aliqua.
+                            </p>
+                          </div>
+                        </li>
+                        <li class="d-flex justify-content-between mb-4">
+                          <div class="chat-body white p-3 z-depth-1">
+                            <div class="header">
+                              <strong class="primary-font">Lara Croft</strong>
+                              <small class="pull-right text-muted"
+                                ><i class="fa fa-clock-o"></i> 13 mins
+                                ago</small
+                              >
+                            </div>
+                            <hr class="w-100" />
+                            <p class="mb-0">
+                              Sed ut perspiciatis unde omnis iste natus error
+                              sit voluptatem accusantium doloremque laudantium.
+                            </p>
+                          </div>
+                          <img
+                            src="https://mdbootstrap.com/img/Photos/Avatars/avatar-5.jpg"
+                            alt="avatar"
+                            class="avatar rounded-circle mr-0 ml-3 z-depth-1"
+                          />
+                        </li>
+                        <li class="white">
+                          <div class="form-group basic-textarea">
+                            <textarea
+                              class="form-control pl-2 my-0"
+                              id="exampleFormControlTextarea2"
+                              rows="3"
+                              placeholder="Type your message here..."
+                            ></textarea>
+                          </div>
+                        </li>
+                        <button
+                          type="button"
+                          class="btn btn-rounded btn-outline-white btn-sm waves-effect waves-light float-right"
+                        >
+                          Send
+                        </button>
+                      </ul>
+                    </div>
+                  </div>
+                  <!-- Grid column -->
+                </div>
+                <!-- Grid row -->
+              </div>
+            </div>
+            <!-- !CHATBOX -->
+          </div>
+        </div>
+        <!-- Mask & flexbox options -->
+      </div>
+      <!-- Full Page Intro -->
+    </main>
+    <!-- Main navigation -->
+  </body>
   <script
     type="text/javascript"
     src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"
