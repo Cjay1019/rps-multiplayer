@@ -1,41 +1,42 @@
 // Initialize Firebase
 var config = {
-  apiKey: "AIzaSyB1PfwyPzlpdag3n_roSKD2ToFBW-Yz1cI",
-  authDomain: "rps-multiplayer-67213.firebaseapp.com",
-  databaseURL: "https://rps-multiplayer-67213.firebaseio.com",
-  projectId: "rps-multiplayer-67213",
-  storageBucket: "",
-  messagingSenderId: "299883516541"
+  apiKey: "AIzaSyAP5EtaIRUYO8N3R6tQtDtUalKxHGESQiI",
+  authDomain: "rps-multiplayer-c9b04.firebaseapp.com",
+  databaseURL: "https://rps-multiplayer-c9b04.firebaseio.com",
+  projectId: "rps-multiplayer-c9b04",
+  storageBucket: "rps-multiplayer-c9b04.appspot.com",
+  messagingSenderId: "586233932884"
 };
 firebase.initializeApp(config);
 
-// Initialize animations
+// Initialize animations and launch page
 new WOW().init();
-
 $("#game-content").hide();
-// Database Reference
+
+// Database reference
 var database = firebase.database();
-var snapshot;
-var connectionsRef = database.ref("/connections");
-var connectedRef = database.ref(".info/connected");
+var usersRef = database.ref("/users");
 
-connectedRef.on("value", function(snap) {
-  connectionsRef.numChildren();
-  if (snap.val()) {
-    var con = connectionsRef.push(true);
-    con.onDisconnect().remove();
+var currentPlayer = 0;
+var activeUsers = 0;
+
+// Click handlers
+$("#join").on("click", join);
+
+function join() {
+  var playerName = prompt("Enter your name");
+  if (playerName == null || playerName == "") {
+    return;
+  } else {
+    $("#intro-content").hide();
+    $("#game-content").show();
+    activeUsers++;
+    usersRef.once("value").then(function(snap) {
+      if (snap.numChildren() == 0) {
+        usersRef.update({ player1: playerName });
+      } else if (snap.child("player1").exists()) {
+        usersRef.update({ player2: playerName });
+      }
+    });
   }
-});
-
-database.ref().on("value", function(snap) {});
-
-connectionsRef.on("value", function(snap) {
-  // Display the viewer count in the html.
-  // The number of online users is the number of children in the connections list.
-  $("#connected-viewers").text(snap.numChildren());
-});
-
-$("#join").on("click", function() {
-  $("#intro-content").hide();
-  $("#game-content").show();
-});
+}
