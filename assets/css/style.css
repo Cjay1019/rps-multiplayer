@@ -48,7 +48,8 @@ main,
 }
 /* !INTRO */
 
-.rps-images {
+.rps-images-1,
+.rps-images-2 {
   max-width: 30%;
   height: auto;
   display: inline !important;
