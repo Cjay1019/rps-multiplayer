@@ -17,12 +17,13 @@ $("#game-content").hide();
 var database = firebase.database();
 var playersRef = database.ref("/players");
 var turnRef = database.ref("/turn");
+var outcomeRef = database.ref("/outcome");
 
 // Game Variables
 var player1 = null;
 var player2 = null;
-var player1UID = "";
-var player2UID = "";
+var player1UID = "Player 1";
+var player2UID = "Player 2";
 var currentUID = "";
 var player1Choice = "";
 var player2Choice = "";
@@ -55,17 +56,41 @@ $(".rps-images-2").on("click", function() {
 playersRef.on("value", function(snap) {
   if (snap.child("player1").exists()) {
     player1 = snap.val().player1;
-    player1UID = player1.UID;
+    player1UID = player1.name;
+    $("#player-1-label").text(player1UID);
+    $("#player-2-status").text("");
   } else {
     player1 = null;
-    player1UID = "";
+    player1UID = "Player 1";
+    $("#player-1-label").text(player1UID);
+    $("#player-2-status").text("Waiting for an Opponent");
   }
   if (snap.child("player2").exists()) {
     player2 = snap.val().player2;
-    player2UID = player2.UID;
+    player2UID = player2.name;
+    $("#player-2-label").text(player2UID);
+    $("#player-1-status").text("");
   } else {
     player2 = null;
-    player2UID = "";
+    player2UID = "Player 2";
+    $("#player-2-label").text(player2UID);
+    $("#player-1-status").text("Waiting for an Opponent");
+  }
+  if (snap.child("player1").exists() && snap.child("player2").exists()) {
+    $("#player1-wins").text("Wins: " + player1.wins);
+    $("#player1-losses").text("Losses: " + player1.losses);
+    $("#player1-ties").text("Ties: " + player1.ties);
+    $("#player2-wins").text("Wins: " + player2.wins);
+    $("#player2-losses").text("Losses: " + player2.losses);
+    $("#player2-ties").text("Ties: " + player2.ties);
+  }
+  if (
+    snap.child("player1").exists() &&
+    snap.child("player2").exists() &&
+    turn === 1
+  ) {
+    $("#player-1-status").text("Choose your weapon!");
+    $("#player-2-status").text(player1UID + " is choosing");
   }
 });
 
@@ -75,7 +100,48 @@ turnRef.on("value", function(snap) {
     turn = 1;
   } else if (snap.val() === 2) {
     turn = 2;
+    $("#player-2-status").text("Choose your weapon!");
+    $("#player-1-status").text(player2UID + " is choosing");
   }
+});
+
+outcomeRef.on("value", function(snap) {
+  if (snap.val() === "") {
+    return;
+  } else if (snap.val() === "rockWin") {
+    $("#player-1-status").text(player1UID + " chose rock and won!");
+    $("#player-2-status").text(player2UID + " chose scissors and lost!");
+  } else if (snap.val() === "rockLoss") {
+    $("#player-1-status").text(player1UID + " chose rock and lost!");
+    $("#player-2-status").text(player2UID + " chose paper and won!");
+  } else if (snap.val() === "rockTie") {
+    $("#player-1-status").text(player1UID + " chose rock and tied!");
+    $("#player-2-status").text(player2UID + " chose rock and tied!");
+  } else if (snap.val() === "paperWin") {
+    $("#player-1-status").text(player1UID + " chose paper and won!");
+    $("#player-2-status").text(player2UID + " chose rock and lost!");
+  } else if (snap.val() === "paperLoss") {
+    $("#player-1-status").text(player1UID + " chose paper and lost!");
+    $("#player-2-status").text(player2UID + " chose scissors and won!");
+  } else if (snap.val() === "paperTie") {
+    $("#player-1-status").text(player1UID + " chose paper and tied!");
+    $("#player-2-status").text(player2UID + " chose paper and tied!");
+  } else if (snap.val() === "scissorsWin") {
+    $("#player-1-status").text(player1UID + " chose scissor and won!");
+    $("#player-2-status").text(player2UID + " chose paper and lost!");
+  } else if (snap.val() === "scissorsLoss") {
+    $("#player-1-status").text(player1UID + " chose scissors and lost!");
+    $("#player-2-status").text(player2UID + " chose rock and won!");
+  } else if (snap.val() === "scissorsTie") {
+    $("#player-1-status").text(player1UID + " chose scissors and tied!");
+    $("#player-2-status").text(player2UID + " chose scissors and tied!");
+  }
+  outcomeRef.set("");
+  setTimeout(function() {
+    turnRef.set(1);
+    $("#player-1-status").text("Choose your weapon!");
+    $("#player-2-status").text(player1UID + " is choosing");
+  }, 3000);
 });
 
 // Prompt user to enter name, dictates which player they will be assigned, and fills in game variables accordingly
@@ -128,37 +194,55 @@ function winCheck() {
     case "rock":
       switch (player2.choice) {
         case "rock":
-          console.log("tie");
+          playersRef.child("/player1/ties").set(player1.ties + 1);
+          playersRef.child("/player2/ties").set(player2.ties + 1);
+          outcomeRef.set("rockTie");
           return;
         case "paper":
-          console.log("player2 wins");
+          playersRef.child("/player1/losses").set(player1.losses + 1);
+          playersRef.child("/player2/wins").set(player2.wins + 1);
+          outcomeRef.set("rockLoss");
           return;
         case "scissors":
-          console.log("player1 wins");
+          playersRef.child("/player1/wins").set(player1.wins + 1);
+          playersRef.child("/player2/losses").set(player2.losses + 1);
+          outcomeRef.set("rockWin");
           return;
       }
     case "paper":
       switch (player2.choice) {
         case "rock":
-          console.log("player1 wins");
+          playersRef.child("/player1/wins").set(player1.wins + 1);
+          playersRef.child("/player2/losses").set(player2.losses + 1);
+          outcomeRef.set("paperWin");
           return;
         case "paper":
-          console.log("tie");
+          playersRef.child("/player1/ties").set(player1.ties + 1);
+          playersRef.child("/player2/ties").set(player2.ties + 1);
+          outcomeRef.set("paperTie");
           return;
         case "scissors":
-          console.log("player2 wins");
+          playersRef.child("/player1/losses").set(player1.losses + 1);
+          playersRef.child("/player2/wins").set(player2.wins + 1);
+          outcomeRef.set("paperLoss");
           return;
       }
     case "scissors":
       switch (player2.choice) {
         case "rock":
-          console.log("player2 wins");
+          playersRef.child("/player1/losses").set(player1.losses + 1);
+          playersRef.child("/player2/wins").set(player2.wins + 1);
+          outcomeRef.set("scissorsLoss");
           return;
         case "paper":
-          console.log("player1 wins");
+          playersRef.child("/player1/wins").set(player1.wins + 1);
+          playersRef.child("/player2/losses").set(player2.losses + 1);
+          outcomeRef.set("scissorsWin");
           return;
         case "scissors":
-          console.log("tie");
+          playersRef.child("/player1/ties").set(player1.ties + 1);
+          playersRef.child("/player2/ties").set(player2.ties + 1);
+          outcomeRef.set("scissorsTie");
           return;
       }
   }
