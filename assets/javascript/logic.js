@@ -18,6 +18,7 @@ var database = firebase.database();
 var playersRef = database.ref("/players");
 var turnRef = database.ref("/turn");
 var outcomeRef = database.ref("/outcome");
+var chatRef = database.ref("/chat");
 
 // Game Variables
 var player1 = null;
@@ -92,6 +93,25 @@ playersRef.on("value", function(snap) {
     $("#player-1-status").text("Choose your weapon!");
     $("#player-2-status").text(player1UID + " is choosing");
   }
+  if (!player1 && !player2) {
+    database.ref("/chat/").remove();
+    $("#chat-content").empty();
+  }
+});
+
+playersRef.on("child_removed", function(snap) {
+  var msg = snap.val().name + " has left the game.";
+  chatRef.set(msg);
+});
+
+playersRef.on("child_added", function(snap) {
+  var msg = snap.val().name + " has joined the game.";
+  chatRef.set(msg);
+});
+
+chatRef.on("value", function(snap) {
+  msg = $("<p>").text(snap.val());
+  $("#chat-content").append(msg);
 });
 
 // Event listener updating turn variable
@@ -146,45 +166,49 @@ outcomeRef.on("value", function(snap) {
 
 // Prompt user to enter name, dictates which player they will be assigned, and fills in game variables accordingly
 function join() {
-  var yourName = prompt("Enter your name");
-  if (yourName == null || yourName == "") {
-    alert("You must enter a name");
-    join();
+  if (player1 && player2) {
+    alert("Game is full!");
   } else {
-    $("#intro-content").hide();
-    $("#game-content").show();
-    if (player1 === null) {
-      currentUID = yourName;
-      player1 = {
-        name: currentUID,
-        wins: 0,
-        losses: 0,
-        ties: 0,
-        choice: ""
-      };
-      playersRef.child("/player1").set(player1);
-      database
-        .ref()
-        .child("/turn")
-        .set(1);
-      database
-        .ref("/players/player1")
-        .onDisconnect()
-        .remove();
-    } else if (player1 !== null && player2 === null) {
-      currentUID = yourName;
-      player2 = {
-        name: currentUID,
-        wins: 0,
-        losses: 0,
-        ties: 0,
-        choice: ""
-      };
-      playersRef.child("/player2").set(player2);
-      database
-        .ref("/players/player2")
-        .onDisconnect()
-        .remove();
+    var yourName = prompt("Enter your name");
+    if (yourName == null || yourName == "") {
+      alert("You must enter a name");
+      join();
+    } else {
+      $("#intro-content").hide();
+      $("#game-content").show();
+      if (player1 === null) {
+        currentUID = yourName;
+        player1 = {
+          name: currentUID,
+          wins: 0,
+          losses: 0,
+          ties: 0,
+          choice: ""
+        };
+        playersRef.child("/player1").set(player1);
+        database
+          .ref()
+          .child("/turn")
+          .set(1);
+        database
+          .ref("/players/player1")
+          .onDisconnect()
+          .remove();
+      } else if (player1 !== null && player2 === null) {
+        currentUID = yourName;
+        player2 = {
+          name: currentUID,
+          wins: 0,
+          losses: 0,
+          ties: 0,
+          choice: ""
+        };
+        playersRef.child("/player2").set(player2);
+        database
+          .ref("/players/player2")
+          .onDisconnect()
+          .remove();
+      }
     }
   }
 }

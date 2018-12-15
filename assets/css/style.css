@@ -59,7 +59,8 @@ main,
   display: inline;
 }
 
-#chat {
+#chat-box {
   background: none;
   overflow-y: scroll;
+  color: white;
 }
