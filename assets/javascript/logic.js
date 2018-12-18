@@ -32,6 +32,8 @@ var turn = 1;
 
 // Click Handlers
 $("#join").on("click", join);
+
+//
 $(".rps-images-1").on("click", function() {
   if (player1 && player2 && currentUID === player1.name && turn === 1) {
     var choice = $(this).attr("data-value");
@@ -44,6 +46,8 @@ $(".rps-images-1").on("click", function() {
       .set(2);
   }
 });
+
+//
 $(".rps-images-2").on("click", function() {
   if (player1 && player2 && currentUID === player2.name && turn === 2) {
     var choice = $(this).attr("data-value");
@@ -51,6 +55,16 @@ $(".rps-images-2").on("click", function() {
     playersRef.child("/player2/choice").set(choice);
     winCheck();
   }
+});
+
+//
+$("#chat-submit").on("click", function(e) {
+  e.preventDefault();
+  var msg = $("#chatInput")
+    .val()
+    .trim();
+  chatRef.set(currentUID + ": " + msg);
+  $("#chatInput").val("");
 });
 
 // Event listener that sends game variable to the database, or resets them on disconnect
@@ -99,19 +113,23 @@ playersRef.on("value", function(snap) {
   }
 });
 
+// Listener that writes disconnect message
 playersRef.on("child_removed", function(snap) {
   var msg = snap.val().name + " has left the game.";
   chatRef.set(msg);
 });
 
+// Listener that writes reconnect message
 playersRef.on("child_added", function(snap) {
   var msg = snap.val().name + " has joined the game.";
   chatRef.set(msg);
 });
 
+// Listener that writes the latest chat message
 chatRef.on("value", function(snap) {
   msg = $("<p>").text(snap.val());
   $("#chat-content").append(msg);
+  updateScroll();
 });
 
 // Event listener updating turn variable
@@ -125,6 +143,7 @@ turnRef.on("value", function(snap) {
   }
 });
 
+// Listener that determines the game outcome and prints it on screen
 outcomeRef.on("value", function(snap) {
   if (snap.val() === "") {
     return;
@@ -156,6 +175,7 @@ outcomeRef.on("value", function(snap) {
     $("#player-1-status").text(player1UID + " chose scissors and tied!");
     $("#player-2-status").text(player2UID + " chose scissors and tied!");
   }
+  // Then the game is reset
   outcomeRef.set("");
   setTimeout(function() {
     turnRef.set(1);
@@ -213,6 +233,7 @@ function join() {
   }
 }
 
+// Checks the player choices to determine the outcome, then updates their scores accordingly
 function winCheck() {
   switch (player1.choice) {
     case "rock":
@@ -270,4 +291,8 @@ function winCheck() {
           return;
       }
   }
+}
+
+function updateScroll() {
+  $("#chat").scrollTop($("#chat")[0].scrollHeight);
 }
