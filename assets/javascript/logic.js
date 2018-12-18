@@ -30,10 +30,10 @@ var player1Choice = "";
 var player2Choice = "";
 var turn = 1;
 
-// Click Handlers
+// Click handler for join button
 $("#join").on("click", join);
 
-//
+// Click handler for player 1 to lock in choice
 $(".rps-images-1").on("click", function() {
   if (player1 && player2 && currentUID === player1.name && turn === 1) {
     var choice = $(this).attr("data-value");
@@ -47,7 +47,7 @@ $(".rps-images-1").on("click", function() {
   }
 });
 
-//
+// Click handler for player 2 to lock in choice
 $(".rps-images-2").on("click", function() {
   if (player1 && player2 && currentUID === player2.name && turn === 2) {
     var choice = $(this).attr("data-value");
@@ -57,7 +57,7 @@ $(".rps-images-2").on("click", function() {
   }
 });
 
-//
+// Click handler for chat submission
 $("#chat-submit").on("click", function(e) {
   e.preventDefault();
   var msg = $("#chatInput")
@@ -293,6 +293,7 @@ function winCheck() {
   }
 }
 
+// Function to always scroll to the bottom of chat log on update
 function updateScroll() {
   $("#chat").scrollTop($("#chat")[0].scrollHeight);
 }
