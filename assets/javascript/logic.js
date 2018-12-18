@@ -63,6 +63,7 @@ $("#chat-submit").on("click", function(e) {
   var msg = $("#chatInput")
     .val()
     .trim();
+  chatRef.remove();
   chatRef.set(currentUID + ": " + msg);
   $("#chatInput").val("");
 });
