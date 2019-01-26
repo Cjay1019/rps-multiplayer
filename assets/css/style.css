@@ -46,6 +46,12 @@ main,
     rgba(13, 17, 198, 0.69) 100%
   );
 }
+
+#game-content {
+  height: 100%;
+  overflow: auto;
+  padding: 50px, 0px;
+}
 /* !INTRO */
 
 .rps-images-1,
